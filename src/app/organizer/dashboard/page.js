@@ -1800,11 +1800,9 @@ export default function OrganizerDashboard() {
                   <div className="flex items-start gap-4">
                     <div className="text-4xl">
                       {selectedVenue.type === 'stadium' && '🏟️'}
-                      {selectedVenue.type === 'concert_hall' && '🏛️'}
+                      {selectedVenue.type === 'hall' && '🏛️'}
                       {selectedVenue.type === 'outdoor' && '🌳'}
                       {selectedVenue.type === 'arena' && '🏟️'}
-                      {selectedVenue.type === 'theater' && '🎭'}
-                      {selectedVenue.type === 'club' && '🎵'}
                     </div>
                     <div className="flex-1">
                       <p className="font-bold text-lg">{selectedVenue.name}</p>

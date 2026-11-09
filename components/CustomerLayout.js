@@ -101,7 +101,7 @@ export default function CustomerLayout({ children }) {
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search concerts, artists, venues..."
+                placeholder="Search concerts and venues..."
                 className="w-full px-4 py-2.5 pl-11 glass rounded-full text-sm text-white placeholder-white/40 focus:border-primary focus:outline-none transition-all"
               />
               <button

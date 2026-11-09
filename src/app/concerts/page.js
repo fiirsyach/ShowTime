@@ -41,7 +41,7 @@ export default function ConcertsPage() {
               <h1 className="text-4xl md:text-5xl font-bold mt-2">Concerts</h1>
             </div>
             <p className="text-white/60 max-w-xl">
-              Explore upcoming live performances, limited festival runs, and favorite artist shows across the city.
+              Explore upcoming live performances and limited festival runs across the city.
             </p>
           </div>
 

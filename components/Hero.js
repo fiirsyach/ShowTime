@@ -81,7 +81,7 @@ const Hero = () => {
   const venue = concert?.venue?.name || concert?.venueName || concert?.location;
   const city = concert?.venue?.city || concert?.city;
   const location = [venue, city].filter(Boolean).join(', ');
-  const artist = concert?.artist?.name || concert?.artistName || concert?.genre;
+  const genre = concert?.genre;
 
   return (
     <section className="relative min-h-screen w-full overflow-hidden flex items-center bg-dark pt-24">
@@ -124,10 +124,10 @@ const Hero = () => {
             >
               <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
               <span>{loading ? 'Mencari konser terdekat' : concert ? 'Konser terdekat' : 'Jadwal konser'}</span>
-              {artist && (
+              {genre && (
                 <>
                   <span className="text-white/40">•</span>
-                  <span className="text-white/60">{artist}</span>
+                  <span className="text-white/60">{genre}</span>
                 </>
               )}
             </motion.div>
@@ -144,7 +144,7 @@ const Hero = () => {
 
             <p className="text-lg md:text-xl text-white/80 mb-8 max-w-2xl leading-relaxed">
               {concert?.description || (concert
-                ? `Jangan lewatkan ${concert.name}${artist ? ` bersama ${artist}` : ''}. Amankan tiketmu sekarang.`
+                ? `Jangan lewatkan ${concert.name}. Amankan tiketmu sekarang.`
                 : error || 'Jelajahi berbagai konser dan temukan acara berikutnya.')}
             </p>
 

@@ -299,7 +299,6 @@ export default function ConcertDetailPage() {
                 )}
               </div>
               <h1 className="text-3xl md:text-4xl font-bold">{concert.name}</h1>
-              <p className="text-lg text-white/80 mt-2">by {concert.artist?.name || 'Various Artists'}</p>
               
               <div className="flex items-center gap-4 mt-4">
                 <button
@@ -382,20 +381,6 @@ export default function ConcertDetailPage() {
                   </p>
                 </div>
 
-                {concert.artist && (
-                  <div className="glass p-6 rounded-2xl">
-                    <h3 className="text-xl font-bold mb-3">🎤 Artis</h3>
-                    <div className="flex items-center gap-4">
-                      <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-2xl">
-                        {concert.artist.name?.charAt(0) || '🎤'}
-                      </div>
-                      <div>
-                        <h4 className="font-semibold">{concert.artist.name}</h4>
-                        <p className="text-sm text-white/60">{concert.artist.genre || 'Various'}</p>
-                      </div>
-                    </div>
-                  </div>
-                )}
               </div>
             )}
 

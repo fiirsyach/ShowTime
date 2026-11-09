@@ -57,7 +57,6 @@ export default function CustomerLayout({ children }) {
     { href: '/', label: 'Home' },
     { href: '/concerts', label: 'Concerts' },
     { href: '/festival', label: 'Festival' },
-    { href: '/artists', label: 'Artists' },
   ];
 
   const profileMenu = [

@@ -124,7 +124,7 @@ export default function CustomerDashboard() {
               Welcome back, <span className="text-gradient">{user?.name}</span>!
             </h1>
             <p className="text-lg text-white/60">
-              Discover new concerts, manage your tickets, and never miss your favorite artists.
+              Discover new concerts and manage your tickets in one place.
             </p>
           </div>
         </div>

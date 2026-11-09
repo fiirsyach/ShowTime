@@ -212,7 +212,6 @@ export default function MyTicketsPage() {
                             {ticket.concert?.name || 'Concert'}
                           </h3>
                           <p className="text-sm text-white/60">
-                            by {ticket.concert?.artist?.name || 'Unknown Artist'}
                           </p>
                         </div>
                         <div className="flex flex-wrap gap-2">

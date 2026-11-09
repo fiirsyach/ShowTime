@@ -215,7 +215,7 @@ const Navbar = () => {
           <div className="relative">
             <input
               type="text"
-              placeholder="Search concerts, artists, venues..."
+              placeholder="Search concerts and venues..."
               className="w-full px-4 py-3 pl-12 bg-dark/50 backdrop-blur-lg border border-white/10 rounded-xl text-white placeholder-white/50 focus:border-primary focus:outline-none"
             />
             <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-white/50" />

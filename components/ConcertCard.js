@@ -17,7 +17,7 @@ const ConcertCard = ({ concert, index }) => {
   const isWishlistBusy = wishlistBusyConcertIds.includes(concertId);
 
   const price = Number(concert.minPrice ?? concert.price ?? 0);
-  const artistName = concert.artist?.name || concert.artistName || concert.artist || 'Artist';
+  const genre = concert.genre || 'Konser';
   const location = concert.venue?.name || concert.venueName || concert.location || 'Lokasi belum diatur';
   const badge = concert.badge || (concert.isFeatured ? 'Featured' : concert.isFlashSale ? 'Flash Sale' : null);
   const availableTickets = Number(concert.availableTickets ?? concert.available ?? 0);
@@ -131,7 +131,7 @@ const ConcertCard = ({ concert, index }) => {
               <h3 className="font-bold text-lg line-clamp-1 group-hover:text-primary transition-colors">
                 {concert.name}
               </h3>
-              <p className="text-sm text-white/60">by {artistName}</p>
+              <p className="text-sm text-white/60">{genre}</p>
             </div>
             <div className="ml-2 px-2 py-0.5 bg-primary/20 rounded text-xs text-primary font-medium">
               {concert.genre || concert.category || 'Concert'}

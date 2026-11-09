@@ -400,7 +400,6 @@ export default function PromoPage() {
                     <option value="voucher">Voucher</option>
                     <option value="discount">Discount</option>
                     <option value="flash_sale">Flash Sale</option>
-                    <option value="bundle">Bundle</option>
                   </select>
                 </div>
                 <div>

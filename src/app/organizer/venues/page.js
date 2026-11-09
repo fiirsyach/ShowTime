@@ -56,7 +56,7 @@ export default function OrganizerVenuesPage() {
   const [editingVenue, setEditingVenue] = useState(null);
   const [formData, setFormData] = useState({
     name: '',
-    type: 'concert_hall',
+    type: 'hall',
     stageType: 'front',
     city: '',
     address: '',
@@ -68,18 +68,15 @@ export default function OrganizerVenuesPage() {
   // Venue types options
   const venueTypes = [
     { value: 'stadium', label: '🏟️ Stadium', description: 'Melingkar/oval seperti stadion' },
-    { value: 'concert_hall', label: '🏛️ Concert Hall', description: 'Teratur menghadap panggung' },
+    { value: 'hall', label: '🏛️ Hall', description: 'Teratur menghadap panggung' },
     { value: 'outdoor', label: '🌳 Outdoor', description: 'Lapangan terbuka' },
     { value: 'arena', label: '🏟️ Arena', description: 'Oval dengan tribun mengelilingi' },
-    { value: 'theater', label: '🎭 Theater', description: 'Layout theater klasik' },
-    { value: 'club', label: '🎵 Club', description: 'Intimate club layout' }
   ];
 
   const stageTypes = [
     { value: 'front', label: 'Front Stage - Panggung di depan' },
     { value: 'center', label: 'Center Stage - Panggung di tengah' },
-    { value: 'end', label: 'End Stage - Panggung di ujung' },
-    { value: 'thrust', label: 'Thrust Stage - Panggung menjorok' },
+    { value: 'back', label: 'Back Stage - Panggung di belakang' },
     { value: 'in_the_round', label: 'In The Round - Panggung dikelilingi' }
   ];
 
@@ -134,7 +131,7 @@ export default function OrganizerVenuesPage() {
         setEditingVenue(null);
         setFormData({
           name: '',
-          type: 'concert_hall',
+          type: 'hall',
           stageType: 'front',
           city: '',
           address: '',
@@ -171,11 +168,9 @@ export default function OrganizerVenuesPage() {
   const getVenueTypeIcon = (type) => {
     switch(type) {
       case 'stadium': return '🏟️';
-      case 'concert_hall': return '🏛️';
+      case 'hall': return '🏛️';
       case 'outdoor': return '🌳';
       case 'arena': return '🏟️';
-      case 'theater': return '🎭';
-      case 'club': return '🎵';
       default: return '📍';
     }
   };
@@ -272,7 +267,7 @@ export default function OrganizerVenuesPage() {
                 setEditingVenue(null);
                 setFormData({
                   name: '',
-                  type: 'concert_hall',
+                  type: 'hall',
                   stageType: 'front',
                   city: '',
                   address: '',
@@ -361,11 +356,9 @@ export default function OrganizerVenuesPage() {
 
                   <div className="mt-3 pt-3 border-t border-white/10">
                     <p className="text-xs text-white/40">
-                      🎵 Seat layout: {venue.type === 'stadium' ? 'Melingkar/Stadium' : 
-                        venue.type === 'concert_hall' ? 'Teratur menghadap panggung' :
-                        venue.type === 'outdoor' ? 'Lapangan terbuka' :
-                        venue.type === 'arena' ? 'Oval mengelilingi' :
-                        venue.type === 'theater' ? 'Theater klasik' : 'Club intimate'}
+                      🎵 Seat layout: {venue.type === 'stadium' ? 'Melingkar/Stadium' :
+                        venue.type === 'hall' ? 'Teratur menghadap panggung' :
+                        venue.type === 'outdoor' ? 'Lapangan terbuka' : 'Oval mengelilingi'}
                     </p>
                   </div>
                 </div>
@@ -522,11 +515,9 @@ export default function OrganizerVenuesPage() {
                 </p>
                 <p className="text-sm text-white/80 mt-1">
                   {formData.type === 'stadium' && '🏟️ Stadium layout: Melingkar/oval mengikuti bentuk stadion'}
-                  {formData.type === 'concert_hall' && '🏛️ Concert Hall layout: Teratur menghadap panggung'}
+                  {formData.type === 'hall' && '🏛️ Hall layout: Teratur menghadap panggung'}
                   {formData.type === 'outdoor' && '🌳 Outdoor layout: Lapangan terbuka dengan blok horizontal'}
                   {formData.type === 'arena' && '🏟️ Arena layout: Oval dengan tribun mengelilingi'}
-                  {formData.type === 'theater' && '🎭 Theater layout: Layout theater klasik'}
-                  {formData.type === 'club' && '🎵 Club layout: Intimate club dengan panggung dekat'}
                 </p>
                 <p className="text-xs text-white/40 mt-1">
                   Seat map akan otomatis digenerate berdasarkan tipe venue yang dipilih

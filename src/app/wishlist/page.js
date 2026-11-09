@@ -200,7 +200,7 @@ export default function WishlistPage() {
                     </h2>
                   </Link>
                   <p className="mt-1 line-clamp-1 text-sm text-white/50">
-                    {concert?.artist?.name || concert?.artistName || concert?.organizer?.name || 'Lineup segera diumumkan'}
+                    {concert?.genre || concert?.organizer?.name || 'Lineup segera diumumkan'}
                   </p>
                   
                   <div className="mt-5 space-y-3">

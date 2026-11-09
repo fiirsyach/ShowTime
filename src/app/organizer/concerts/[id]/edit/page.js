@@ -65,8 +65,7 @@ export default function EditOrganizerConcertPage() {
       await api.put(`/organizer/concerts/${id}`, {
         ...form,
         startSale: form.startSale || null,
-        endSale: form.endSale || null,
-        artistId: concert?.artistId
+        endSale: form.endSale || null
       });
       toast.success('Konser diperbarui');
       router.push('/organizer/concerts');
