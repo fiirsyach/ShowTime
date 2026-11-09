@@ -37,6 +37,9 @@ function CheckoutContent() {
   const [loadingData, setLoadingData] = useState(true);
   const [placingOrder, setPlacingOrder] = useState(false);
   const [currentTime, setCurrentTime] = useState(() => Date.now());
+  const [promoCode, setPromoCode] = useState('');
+  const [appliedPromo, setAppliedPromo] = useState(null);
+  const [validatingPromo, setValidatingPromo] = useState(false);
 
   const requestedCategories = useMemo(() => {
     return String(categoryParam || '')
@@ -123,7 +126,8 @@ function CheckoutContent() {
 
   const subtotal = selectedTicketCategories.reduce((sum, ticketCategory) => sum + ticketCategory.price * ticketCategory.quantity, 0);
   const serviceFee = subtotal * 0.05;
-  const total = subtotal + serviceFee;
+  const discount = appliedPromo?.discount || 0;
+  const total = Math.max(0, subtotal + serviceFee - discount);
   const saleStartTime = concert?.startSale ? new Date(concert.startSale).getTime() : null;
   const saleEndTime = concert?.endSale ? new Date(concert.endSale).getTime() : null;
   const saleNotStarted = saleStartTime !== null && saleStartTime > currentTime;
@@ -133,6 +137,36 @@ function CheckoutContent() {
     timeStyle: 'short',
     timeZone: 'Asia/Jakarta'
   });
+
+  const applyPromo = async () => {
+    const code = promoCode.trim().toUpperCase();
+    if (!code) {
+      toast.error('Masukkan kode promo terlebih dahulu');
+      return;
+    }
+    if (!concertId || subtotal <= 0) {
+      toast.error('Pilih tiket sebelum menggunakan promo');
+      return;
+    }
+
+    try {
+      setValidatingPromo(true);
+      const response = await api.get('/promos/validate', {
+        params: { code, subtotal, concertId },
+      });
+      if (!response.data?.success || !response.data.data?.valid) {
+        throw new Error(response.data?.message || 'Kode promo tidak valid');
+      }
+      setAppliedPromo(response.data.data);
+      setPromoCode(response.data.data.code);
+      toast.success('Promo berhasil digunakan');
+    } catch (error) {
+      setAppliedPromo(null);
+      toast.error(error.response?.data?.message || error.message || 'Kode promo tidak dapat digunakan');
+    } finally {
+      setValidatingPromo(false);
+    }
+  };
 
   const handleCheckout = async () => {
     if (!user || !concertId) {
@@ -167,6 +201,7 @@ function CheckoutContent() {
         customerEmail: customerInfo.email,
         customerPhone: customerInfo.phone,
         customerNIK: customerInfo.nik,
+        ...(appliedPromo ? { promotionCode: appliedPromo.code } : {}),
       });
 
       if (!orderResponse.data?.success) {
@@ -306,6 +341,37 @@ function CheckoutContent() {
             )}
 
             <div className="space-y-3 text-sm text-white/70">
+              <div className="mb-5 rounded-xl border border-white/10 bg-dark/40 p-4">
+                <label htmlFor="promo-code" className="mb-2 block text-sm text-white/70">Kode promo</label>
+                <div className="flex gap-2">
+                  <input
+                    id="promo-code"
+                    value={promoCode}
+                    onChange={(event) => {
+                      setPromoCode(event.target.value);
+                      setAppliedPromo(null);
+                    }}
+                    onKeyDown={(event) => {
+                      if (event.key === 'Enter') {
+                        event.preventDefault();
+                        void applyPromo();
+                      }
+                    }}
+                    placeholder="Masukkan kode promo"
+                    className="input-field min-w-0 flex-1"
+                    disabled={validatingPromo || placingOrder}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => void applyPromo()}
+                    disabled={validatingPromo || placingOrder || !promoCode.trim()}
+                    className="btn-secondary shrink-0 disabled:opacity-50"
+                  >
+                    {validatingPromo ? <FaSpinner className="animate-spin" /> : appliedPromo ? 'Ganti' : 'Pakai'}
+                  </button>
+                </div>
+                {appliedPromo && <p className="mt-2 text-xs text-emerald-300">Promo {appliedPromo.code} berhasil diterapkan.</p>}
+              </div>
               <div className="flex justify-between">
                 <span>Subtotal</span>
                 <span>Rp {subtotal.toLocaleString('id-ID')}</span>
@@ -314,6 +380,12 @@ function CheckoutContent() {
                 <span>Biaya layanan</span>
                 <span>Rp {serviceFee.toLocaleString('id-ID')}</span>
               </div>
+              {discount > 0 && (
+                <div className="flex justify-between text-emerald-300">
+                  <span>Diskon promo</span>
+                  <span>- Rp {discount.toLocaleString('id-ID')}</span>
+                </div>
+              )}
               <div className="flex justify-between font-semibold text-white">
                 <span>Total</span>
                 <span>Rp {total.toLocaleString('id-ID')}</span>
