@@ -6,6 +6,10 @@ import axios from 'axios';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
 
+if (API_URL.includes('ngrok')) {
+  axios.defaults.headers.common['ngrok-skip-browser-warning'] = 'true';
+}
+
 const api = axios.create({
   baseURL: API_URL,
   headers: {
