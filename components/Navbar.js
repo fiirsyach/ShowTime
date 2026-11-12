@@ -14,11 +14,11 @@ import {
   FaTimes,
   FaHeart,
   FaCalendarAlt,
-  FaCog,
   FaSignOutAlt,
   FaChevronDown
 } from 'react-icons/fa';
 import NotificationBell from './NotificationBell';
+import { useSiteSettings } from '../context/SiteSettingsContext';
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -27,6 +27,7 @@ const Navbar = () => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const pathname = usePathname();
   const { user, loading: authLoading, logout } = useAuth();
+  const { t } = useSiteSettings();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -57,23 +58,21 @@ const Navbar = () => {
 
   const profileMenu = user?.role === 'customer'
     ? [
-        { href: dashboardPath, icon: FaHome, label: 'Dashboard' },
-        { href: '/my-tickets', icon: FaTicketAlt, label: 'My Tickets' },
-        { href: '/wishlist', icon: FaHeart, label: 'Wishlist' },
-        { href: '/orders', icon: FaCalendarAlt, label: 'Order History' },
-        { href: '/profile', icon: FaUser, label: 'Profile' },
-        { href: '/settings', icon: FaCog, label: 'Settings' },
+        { href: dashboardPath, icon: FaHome, label: t('Dashboard') },
+        { href: '/my-tickets', icon: FaTicketAlt, label: t('My Tickets') },
+        { href: '/wishlist', icon: FaHeart, label: t('Wishlist') },
+        { href: '/orders', icon: FaCalendarAlt, label: t('Order History') },
+        { href: '/profile', icon: FaUser, label: t('Profile') },
       ]
     : [
-        { href: dashboardPath, icon: FaHome, label: 'Dashboard' },
-        { href: '/profile', icon: FaUser, label: 'Profile' },
-        { href: '/settings', icon: FaCog, label: 'Settings' },
+        { href: dashboardPath, icon: FaHome, label: t('Dashboard') },
+        { href: '/profile', icon: FaUser, label: t('Profile') },
       ];
 
   const navLinks = [
-    { href: '/concerts', section: 'concerts', label: 'Concert' },
-    { href: '/festival', section: 'festival', label: 'Festival' },
-    { href: '/promo', section: 'promo', label: 'Promo' },
+    { href: '/concerts', section: 'concerts', label: t('Concert') },
+    { href: '/festival', section: 'festival', label: t('Festival') },
+    { href: '/promo', section: 'promo', label: t('Promo') },
   ];
   const isLandingPage = pathname === '/';
   const getNavHref = (link) => link.section
@@ -183,10 +182,10 @@ const Navbar = () => {
           ) : (
             <div className="flex items-center space-x-3">
               <Link href="/login" className="px-4 py-2 rounded-full hover:bg-white/10 transition-colors">
-                Login
+                {t('Login')}
               </Link>
               <Link href="/register" className="btn-primary px-6 py-2">
-                Register
+                {t('Register')}
               </Link>
             </div>
           )}

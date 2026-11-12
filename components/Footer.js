@@ -8,7 +8,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Brand */}
           <div>
-            <h3 className="text-2xl font-bold text-gradient mb-4">ConcertHub</h3>
+            <h3 className="text-2xl font-bold text-gradient mb-4">ShowTime</h3>
             <p className="text-white/60 text-sm">
               Your premier destination for concert tickets and live events.
               Experience the best music events with ease.
@@ -72,7 +72,7 @@ const Footer = () => {
         </div>
 
         <div className="mt-8 pt-8 border-t border-white/10 text-center text-white/40 text-sm">
-          <p>&copy; 2025 ConcertHub. All rights reserved.</p>
+          <p>&copy; 2025 ShowTime. All rights reserved.</p>
         </div>
       </div>
     </footer>

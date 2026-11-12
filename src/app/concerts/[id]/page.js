@@ -22,10 +22,11 @@ import {
   FaTimesCircle
 } from 'react-icons/fa';
 import { format } from 'date-fns';
-import { id } from 'date-fns/locale';
+import { enUS, id as idLocale } from 'date-fns/locale';
 import toast from 'react-hot-toast';
 import axios from 'axios';
 import { getConcertPoster } from '../../../../lib/media-url';
+import { useSiteSettings } from '../../../../context/SiteSettingsContext';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
 
@@ -50,6 +51,7 @@ api.interceptors.request.use(
 export default function ConcertDetailPage() {
   const { id } = useParams();
   const { user, wishlistConcertIds, toggleWishlist: toggleConcertWishlist } = useAuth();
+  const { formatMoney, language } = useSiteSettings();
   const router = useRouter();
   const [concert, setConcert] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -99,10 +101,10 @@ export default function ConcertDetailPage() {
   const fetchSeats = async () => {
   try {
     setLoadingSeats(true);
-    console.log('🔍 Fetching seats for concert:', id);
+    console.log('Fetching seats for concert:', id);
     
     const response = await api.get(`/concerts/${id}/seats`);
-    console.log('✅ Seats response:', response.data);
+    console.log('Seats response:', response.data);
     
     if (response.data.success) {
       const data = response.data.data;
@@ -190,7 +192,7 @@ export default function ConcertDetailPage() {
   const formatDate = (dateString) => {
     if (!dateString) return '-';
     try {
-      return format(new Date(dateString), 'EEEE, d MMMM yyyy', { locale: id });
+      return format(new Date(dateString), 'EEEE, d MMMM yyyy', { locale: language === 'en' ? enUS : idLocale });
     } catch (error) {
       return '-';
     }
@@ -433,7 +435,7 @@ export default function ConcertDetailPage() {
                                   <span className={`h-2.5 w-2.5 rounded-full ${theme.swatch}`} />
                                   <h4 className="truncate font-semibold">{ticketCategory.category}</h4>
                                 </div>
-                                <p className={`mt-2 text-lg font-bold ${theme.text}`}>Rp {Number(ticketCategory.price).toLocaleString('id-ID')}</p>
+                                <p className={`mt-2 text-lg font-bold ${theme.text}`}>{formatMoney(ticketCategory.price)}</p>
                                 <p className="mt-1 text-xs text-white/45">Tersedia {ticketCategory.available} tiket</p>
                               </div>
                               <div className="flex shrink-0 items-center gap-2" aria-label={`Jumlah ${ticketCategory.category}`}>
@@ -496,7 +498,7 @@ export default function ConcertDetailPage() {
               <div className="space-y-3">
                 <div className="flex justify-between">
                   <span className="text-white/60">Harga Mulai</span>
-                  <span className="font-bold text-gradient">Rp {concert.minPrice?.toLocaleString() || '0'}</span>
+                  <span className="font-bold text-gradient">{formatMoney(concert.minPrice || 0)}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-white/60">Tiket Tersedia</span>

@@ -5,13 +5,16 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { FaHeart, FaMapMarkerAlt, FaCalendarAlt, FaTicketAlt, FaStar, FaClock } from 'react-icons/fa';
-import { format, formatDistanceToNow } from 'date-fns';
+import { formatDistanceToNow } from 'date-fns';
+import { enUS, id } from 'date-fns/locale';
 import { useAuth } from '../context/AuthContext';
 import { getConcertPoster } from '../lib/media-url';
+import { useSiteSettings } from '../context/SiteSettingsContext';
 
 const ConcertCard = ({ concert, index }) => {
   const router = useRouter();
   const { user, loading: authLoading, wishlistConcertIds, wishlistBusyConcertIds, wishlistLoading, toggleWishlist } = useAuth();
+  const { formatMoney, language, t } = useSiteSettings();
   const concertId = Number(concert.id);
   const isLiked = wishlistConcertIds.includes(concertId);
   const isWishlistBusy = wishlistBusyConcertIds.includes(concertId);
@@ -112,14 +115,14 @@ const ConcertCard = ({ concert, index }) => {
           <div className="absolute bottom-0 left-0 right-0 p-5 bg-gradient-to-t from-dark via-dark/80 to-transparent">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-xs text-white/60">Starting from</p>
+                <p className="text-xs text-white/60">{t('Starting from')}</p>
                 <span className="text-2xl font-bold text-gradient">
-                  {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(price)}
+                  {formatMoney(price)}
                 </span>
               </div>
               <div className="flex items-center gap-1 text-xs text-white/60 bg-dark/50 px-3 py-1 rounded-full">
                 <FaClock className="w-3 h-3" />
-                <span>{formatDistanceToNow(new Date(concertDate), { addSuffix: true })}</span>
+                <span>{formatDistanceToNow(new Date(concertDate), { addSuffix: true, locale: language === 'en' ? enUS : id })}</span>
               </div>
             </div>
           </div>
@@ -145,7 +148,7 @@ const ConcertCard = ({ concert, index }) => {
             </div>
             <div className="flex items-center space-x-2 text-sm text-white/60">
               <FaCalendarAlt className="w-3 h-3 text-secondary flex-shrink-0" />
-              <span>{format(new Date(concertDate), 'EEEE, MMM dd, yyyy')}</span>
+              <span>{new Date(concertDate).toLocaleDateString(language === 'en' ? 'en-US' : 'id-ID', { weekday: 'long', month: 'short', day: '2-digit', year: 'numeric' })}</span>
             </div>
           </div>
 
@@ -154,11 +157,11 @@ const ConcertCard = ({ concert, index }) => {
               <div className="w-6 h-6 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-[8px] font-bold">
                 {soldTickets >= 1000 ? `${Math.round(soldTickets / 1000)}k` : soldTickets}
               </div>
-              <span className="text-xs text-white/40">sold</span>
+              <span className="text-xs text-white/40">{t('sold')}</span>
             </div>
             <div className={`flex items-center gap-1.5 text-xs ${availableTickets > 0 ? 'text-primary' : 'text-red-400'}`}>
               <FaTicketAlt className="w-3 h-3" />
-              <span>{availableTickets > 0 ? `${availableTickets} left` : 'Sold Out'}</span>
+              <span>{availableTickets > 0 ? `${availableTickets} ${t('left')}` : t('Sold Out')}</span>
             </div>
           </div>
         </div>

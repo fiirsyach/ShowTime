@@ -7,6 +7,7 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 import { FaSpinner, FaTicketAlt, FaCheckCircle } from 'react-icons/fa';
 import { openMidtransSnap } from '../../lib/midtrans';
+import { useSiteSettings } from '../../../context/SiteSettingsContext';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
 
@@ -26,6 +27,7 @@ api.interceptors.request.use((config) => {
 
 function CheckoutContent() {
   const { user, loading } = useAuth();
+  const { currency, formatMoney, t } = useSiteSettings();
   const router = useRouter();
   const searchParams = useSearchParams();
   const concertId = searchParams.get('concert');
@@ -288,8 +290,8 @@ function CheckoutContent() {
     <div className="min-h-screen bg-dark text-white px-4 py-10">
       <div className="mx-auto max-w-6xl">
         <div className="mb-8">
-          <p className="text-sm uppercase tracking-[0.2em] text-primary/80">Checkout</p>
-          <h1 className="mt-2 text-4xl font-bold">Pembayaran Tiket</h1>
+          <p className="text-sm uppercase tracking-[0.2em] text-primary/80">{t('Checkout')}</p>
+          <h1 className="mt-2 text-4xl font-bold">{t('Ticket Payment')}</h1>
         </div>
 
         <div className="grid gap-8 lg:grid-cols-[1.2fr_0.8fr]">
@@ -312,12 +314,12 @@ function CheckoutContent() {
                 <label className="text-sm text-white/60">NIK<input required inputMode="numeric" pattern="[0-9]{16}" maxLength={16} className="input-field mt-2" value={customerInfo.nik} onChange={(e) => setCustomerInfo({ ...customerInfo, nik: e.target.value.replace(/\D/g, '').slice(0, 16) })} /></label>
               </div>
               <div className="rounded-xl border border-white/10 bg-dark/40 p-4">
-                <p className="mb-2 text-sm text-white/50">Tiket yang dipilih</p>
+                <p className="mb-2 text-sm text-white/50">{t('Tiket yang dipilih')}</p>
                 <div className="space-y-2">
                   {selectedTicketCategories.map((ticketCategory) => (
                     <div key={ticketCategory.id} className="flex justify-between gap-4 text-sm">
                       <span>{ticketCategory.category} <span className="text-white/45">× {ticketCategory.quantity}</span></span>
-                      <span className="text-white/75">Rp {(ticketCategory.price * ticketCategory.quantity).toLocaleString('id-ID')}</span>
+                      <span className="text-white/75">{formatMoney(ticketCategory.price * ticketCategory.quantity)}</span>
                     </div>
                   ))}
                 </div>
@@ -328,8 +330,9 @@ function CheckoutContent() {
 
           <aside className="glass rounded-2xl p-6">
             <div className="mb-6">
-              <p className="text-sm text-white/50">Ringkasan</p>
-              <h3 className="mt-2 text-2xl font-bold">Rp {total.toLocaleString('id-ID')}</h3>
+              <p className="text-sm text-white/50">{t('Ringkasan')}</p>
+              <h3 className="mt-2 text-2xl font-bold">{formatMoney(total)}</h3>
+              {currency === 'USD' && <p className="mt-1 text-xs text-white/45">Pembayaran diproses dalam IDR.</p>}
             </div>
 
             {(saleNotStarted || saleEnded) && (
@@ -342,7 +345,7 @@ function CheckoutContent() {
 
             <div className="space-y-3 text-sm text-white/70">
               <div className="mb-5 rounded-xl border border-white/10 bg-dark/40 p-4">
-                <label htmlFor="promo-code" className="mb-2 block text-sm text-white/70">Kode promo</label>
+                <label htmlFor="promo-code" className="mb-2 block text-sm text-white/70">{t('Kode promo')}</label>
                 <div className="flex gap-2">
                   <input
                     id="promo-code"
@@ -357,7 +360,7 @@ function CheckoutContent() {
                         void applyPromo();
                       }
                     }}
-                    placeholder="Masukkan kode promo"
+                    placeholder={t('Masukkan kode promo')}
                     className="input-field min-w-0 flex-1"
                     disabled={validatingPromo || placingOrder}
                   />
@@ -367,28 +370,28 @@ function CheckoutContent() {
                     disabled={validatingPromo || placingOrder || !promoCode.trim()}
                     className="btn-secondary shrink-0 disabled:opacity-50"
                   >
-                    {validatingPromo ? <FaSpinner className="animate-spin" /> : appliedPromo ? 'Ganti' : 'Pakai'}
+                    {validatingPromo ? <FaSpinner className="animate-spin" /> : appliedPromo ? t('Ganti') : t('Pakai')}
                   </button>
                 </div>
                 {appliedPromo && <p className="mt-2 text-xs text-emerald-300">Promo {appliedPromo.code} berhasil diterapkan.</p>}
               </div>
               <div className="flex justify-between">
-                <span>Subtotal</span>
-                <span>Rp {subtotal.toLocaleString('id-ID')}</span>
+                <span>{t('Subtotal')}</span>
+                <span>{formatMoney(subtotal)}</span>
               </div>
               <div className="flex justify-between">
-                <span>Biaya layanan</span>
-                <span>Rp {serviceFee.toLocaleString('id-ID')}</span>
+                <span>{t('Biaya layanan')}</span>
+                <span>{formatMoney(serviceFee)}</span>
               </div>
               {discount > 0 && (
                 <div className="flex justify-between text-emerald-300">
-                  <span>Diskon promo</span>
-                  <span>- Rp {discount.toLocaleString('id-ID')}</span>
+                  <span>{t('Diskon promo')}</span>
+                  <span>- {formatMoney(discount)}</span>
                 </div>
               )}
               <div className="flex justify-between font-semibold text-white">
-                <span>Total</span>
-                <span>Rp {total.toLocaleString('id-ID')}</span>
+                <span>{t('Total')}</span>
+                <span>{formatMoney(total)}</span>
               </div>
             </div>
 
@@ -406,7 +409,7 @@ function CheckoutContent() {
               ) : (
                 <span className="flex items-center gap-2">
                   <FaCheckCircle />
-                  {saleNotStarted ? 'Penjualan belum dimulai' : saleEnded ? 'Penjualan berakhir' : 'Buat Pesanan'}
+                  {saleNotStarted ? t('Penjualan belum dimulai') : saleEnded ? t('Penjualan berakhir') : t('Buat Pesanan')}
                 </span>
               )}
             </button>

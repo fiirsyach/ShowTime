@@ -56,7 +56,7 @@ const CustomerSidebar = ({ pathname, logout }) => {
   return (
     <aside className="w-64 min-h-screen glass-dark border-r border-white/5 p-6 fixed left-0 top-0 overflow-y-auto z-50">
       <div className="mb-8">
-        <h2 className="text-xl font-bold text-gradient">ConcertHub</h2>
+        <h2 className="text-xl font-bold text-gradient">ShowTime</h2>
         <p className="text-xs text-white/40 mt-1">Customer Dashboard</p>
       </div>
       <nav className="space-y-1">
@@ -98,7 +98,7 @@ const OrganizerSidebar = ({ pathname, logout }) => {
   return (
     <aside className="w-64 min-h-screen glass-dark border-r border-white/5 p-6 fixed left-0 top-0 overflow-y-auto z-50">
       <div className="mb-8">
-        <h2 className="text-xl font-bold text-gradient">ConcertHub</h2>
+        <h2 className="text-xl font-bold text-gradient">ShowTime</h2>
         <p className="text-xs text-white/40 mt-1">Organizer Dashboard</p>
       </div>
       <nav className="space-y-1">
@@ -137,7 +137,7 @@ const AdminSidebar = ({ pathname, logout }) => {
   return (
     <aside className="w-64 min-h-screen glass-dark border-r border-white/5 p-6 fixed left-0 top-0 overflow-y-auto z-50">
       <div className="mb-8">
-        <h2 className="text-xl font-bold text-gradient">ConcertHub</h2>
+        <h2 className="text-xl font-bold text-gradient">ShowTime</h2>
         <p className="text-xs text-white/40 mt-1">Admin Dashboard</p>
       </div>
       <nav className="space-y-1">
@@ -177,7 +177,7 @@ const SuperAdminSidebar = ({ pathname, logout }) => {
   return (
     <aside className="w-64 min-h-screen glass-dark border-r border-white/5 p-6 fixed left-0 top-0 overflow-y-auto z-50">
       <div className="mb-8">
-        <h2 className="text-xl font-bold text-gradient">ConcertHub</h2>
+        <h2 className="text-xl font-bold text-gradient">ShowTime</h2>
         <p className="text-xs text-white/40 mt-1">Super Admin</p>
       </div>
       <nav className="space-y-1">

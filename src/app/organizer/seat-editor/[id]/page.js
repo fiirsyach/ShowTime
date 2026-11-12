@@ -206,7 +206,7 @@ export default function OrganizerSeatEditorPage() {
   const Sidebar = () => (
     <div className="fixed left-0 top-0 h-full w-64 glass-dark border-r border-white/5 p-6 z-50 overflow-y-auto">
       <div className="mb-8">
-        <h2 className="text-xl font-bold text-gradient">ConcertHub</h2>
+        <h2 className="text-xl font-bold text-gradient">ShowTime</h2>
         <p className="text-xs text-white/40 mt-1">Organizer Dashboard</p>
         <p className="text-xs text-secondary mt-1">🏢 {user?.name}</p>
       </div>

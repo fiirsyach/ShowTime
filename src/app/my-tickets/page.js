@@ -17,10 +17,11 @@ import {
   FaChevronRight
 } from 'react-icons/fa';
 import { format } from 'date-fns';
-import { id } from 'date-fns/locale';
+import { enUS, id } from 'date-fns/locale';
 import toast from 'react-hot-toast';
 import axios from 'axios';
 import CustomerLayout from '../../../components/CustomerLayout';
+import { useSiteSettings } from '../../../context/SiteSettingsContext';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
 
@@ -44,6 +45,7 @@ api.interceptors.request.use(
 
 export default function MyTicketsPage() {
   const { user, loading } = useAuth();
+  const { formatMoney, language } = useSiteSettings();
   const router = useRouter();
   const [tickets, setTickets] = useState([]);
   const [loadingTickets, setLoadingTickets] = useState(true);
@@ -224,7 +226,7 @@ export default function MyTicketsPage() {
                       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 mt-3 text-sm text-white/60">
                         <div className="flex items-center gap-2">
                           <FaCalendar className="text-primary w-3 h-3" />
-                          <span>{ticket.concert?.date ? format(new Date(ticket.concert.date), 'd MMM yyyy', { locale: id }) : '-'}</span>
+                          <span>{ticket.concert?.date ? format(new Date(ticket.concert.date), 'd MMM yyyy', { locale: language === 'en' ? enUS : id }) : '-'}</span>
                         </div>
                         <div className="flex items-center gap-2">
                           <FaClock className="text-secondary w-3 h-3" />
@@ -243,7 +245,7 @@ export default function MyTicketsPage() {
                       <div className="flex flex-wrap items-center gap-4 mt-2 text-xs text-white/40">
                         <span>Ticket: {ticket.ticketNumber || ticket.id}</span>
                         <span>•</span>
-                        <span>Price: Rp {ticket.price?.toLocaleString() || 0}</span>
+                        <span>Price: {formatMoney(ticket.price || 0)}</span>
                       </div>
                     </div>
 
@@ -293,7 +295,7 @@ export default function MyTicketsPage() {
                         </div>
                         <div>
                           <p className="text-white/60">Price</p>
-                          <p className="font-bold text-gradient">Rp {ticket.price?.toLocaleString() || 0}</p>
+                          <p className="font-bold text-gradient">{formatMoney(ticket.price || 0)}</p>
                         </div>
                         <div>
                           <p className="text-white/60">Payment Method</p>
@@ -301,7 +303,7 @@ export default function MyTicketsPage() {
                         </div>
                         <div>
                           <p className="text-white/60">Purchased At</p>
-                          <p>{ticket.createdAt ? format(new Date(ticket.createdAt), 'd MMM yyyy HH:mm', { locale: id }) : '-'}</p>
+                          <p>{ticket.createdAt ? format(new Date(ticket.createdAt), 'd MMM yyyy HH:mm', { locale: language === 'en' ? enUS : id }) : '-'}</p>
                         </div>
                       </div>
                     </div>

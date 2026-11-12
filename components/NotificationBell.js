@@ -7,7 +7,10 @@ import toast from 'react-hot-toast';
 import { FaBell, FaCheck, FaSpinner, FaTimes, FaTrash } from 'react-icons/fa';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
-const api = axios.create({ baseURL: API_URL });
+const api = axios.create({
+  baseURL: API_URL,
+  headers: API_URL.includes('ngrok') ? { 'ngrok-skip-browser-warning': 'true' } : {},
+});
 
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('token');

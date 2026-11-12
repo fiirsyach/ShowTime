@@ -15,11 +15,12 @@ import {
   FaArrowRight
 } from 'react-icons/fa';
 import { format } from 'date-fns';
-import { id } from 'date-fns/locale';
+import { enUS, id } from 'date-fns/locale';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import CustomerLayout from '../../../components/CustomerLayout';
 import { getConcertPoster, getMediaUrl } from '../../../lib/media-url';
+import { useSiteSettings } from '../../../context/SiteSettingsContext';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
 
@@ -50,6 +51,7 @@ export default function CustomerDashboard() {
     wishlistLoading,
     toggleWishlist,
   } = useAuth();
+  const { formatMoney, t, language } = useSiteSettings();
   const router = useRouter();
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -175,8 +177,8 @@ export default function CustomerDashboard() {
                 <FaMoneyBillWave className="text-green-500 text-xl" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-gradient">Rp {stats.totalSpent.toLocaleString()}</p>
-                <p className="text-sm text-white/60">Total Spent</p>
+                <p className="text-2xl font-bold text-gradient">{formatMoney(stats.totalSpent)}</p>
+                <p className="text-sm text-white/60">{t('Total Spent')}</p>
               </div>
             </div>
           </div>
@@ -229,7 +231,7 @@ export default function CustomerDashboard() {
                       <p className="text-sm text-white/60">by {concert.organizer?.name || 'Organizer'}</p>
                       <div className="flex items-center gap-2 mt-2 text-sm text-white/60">
                         <FaCalendar className="text-primary w-3 h-3" />
-                        <span>{concert.date ? format(new Date(concert.date), 'd MMM yyyy', { locale: id }) : '-'}</span>
+                        <span>{concert.date ? format(new Date(concert.date), 'd MMM yyyy', { locale: language === 'en' ? enUS : id }) : '-'}</span>
                       </div>
                       <div className="flex items-center gap-2 mt-2 text-sm text-white/60">
                         <FaMapMarkerAlt className="text-secondary w-3 h-3" />
@@ -237,7 +239,7 @@ export default function CustomerDashboard() {
                       </div>
                       <div className="mt-3 pt-3 border-t border-white/10 flex items-center justify-between">
                         <span className="text-lg font-bold text-gradient">
-                          Rp {concert.minPrice?.toLocaleString() || 0}
+                          {formatMoney(concert.minPrice || 0)}
                         </span>
                         <span className="text-xs text-green-400">
                           {concert.availableTickets || 0} left
@@ -292,10 +294,10 @@ export default function CustomerDashboard() {
                     </div>
                     <div className="text-right text-sm">
                       <p className="text-primary">
-                        {ticket.concert?.date ? format(new Date(ticket.concert.date), 'd MMM', { locale: id }) : '-'}
+                        {ticket.concert?.date ? format(new Date(ticket.concert.date), 'd MMM', { locale: language === 'en' ? enUS : id }) : '-'}
                       </p>
                       <p className="text-xs text-white/40">
-                        {ticket.concert?.date ? format(new Date(ticket.concert.date), 'HH:mm', { locale: id }) : '-'}
+                        {ticket.concert?.date ? format(new Date(ticket.concert.date), 'HH:mm', { locale: language === 'en' ? enUS : id }) : '-'}
                       </p>
                     </div>
                   </div>
@@ -324,8 +326,8 @@ export default function CustomerDashboard() {
                       <p className="text-xs text-white/40">Order #{order.orderNumber || order.id}</p>
                     </div>
                     <div className="text-right">
-                      <p className="text-sm font-bold text-gradient">Rp {order.totalAmount?.toLocaleString() || 0}</p>
-                      <p className="text-xs text-white/40">{order.createdAt ? format(new Date(order.createdAt), 'd MMM yyyy', { locale: id }) : '-'}</p>
+                      <p className="text-sm font-bold text-gradient">{formatMoney(order.totalAmount || 0)}</p>
+                      <p className="text-xs text-white/40">{order.createdAt ? format(new Date(order.createdAt), 'd MMM yyyy', { locale: language === 'en' ? enUS : id }) : '-'}</p>
                     </div>
                   </div>
                 ))}

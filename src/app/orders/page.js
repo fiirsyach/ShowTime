@@ -17,10 +17,11 @@ import {
   FaSearch
 } from 'react-icons/fa';
 import { format } from 'date-fns';
-import { id } from 'date-fns/locale';
+import { enUS, id } from 'date-fns/locale';
 import toast from 'react-hot-toast';
 import axios from 'axios';
 import CustomerLayout from '../../../components/CustomerLayout';
+import { useSiteSettings } from '../../../context/SiteSettingsContext';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
 
@@ -44,6 +45,7 @@ api.interceptors.request.use(
 
 export default function OrdersPage() {
   const { user, loading } = useAuth();
+  const { formatMoney, language } = useSiteSettings();
   const router = useRouter();
   const [orders, setOrders] = useState([]);
   const [loadingOrders, setLoadingOrders] = useState(true);
@@ -190,14 +192,14 @@ export default function OrdersPage() {
                       <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 mt-3 text-sm text-white/60">
                         <div className="flex items-center gap-2">
                           <FaCalendar className="text-primary w-3 h-3" />
-                          <span>{order.concert?.date ? format(new Date(order.concert.date), 'd MMM yyyy', { locale: id }) : '-'}</span>
+                          <span>{order.concert?.date ? format(new Date(order.concert.date), 'd MMM yyyy', { locale: language === 'en' ? enUS : id }) : '-'}</span>
                         </div>
                         <div className="flex items-center gap-2">
                           <FaTicketAlt className="text-secondary w-3 h-3" />
                           <span>{order.orderTickets?.length || 0} tickets</span>
                         </div>
                         <div className="flex items-center gap-2">
-                          <span className="font-bold text-gradient">Rp {order.totalAmount?.toLocaleString() || 0}</span>
+                          <span className="font-bold text-gradient">{formatMoney(order.totalAmount || 0)}</span>
                         </div>
                       </div>
                       
@@ -206,7 +208,7 @@ export default function OrdersPage() {
                         <span>•</span>
                         <span>Status: {order.orderPayment?.status || 'pending'}</span>
                         <span>•</span>
-                        <span>{order.createdAt ? format(new Date(order.createdAt), 'd MMM yyyy HH:mm', { locale: id }) : '-'}</span>
+                        <span>{order.createdAt ? format(new Date(order.createdAt), 'd MMM yyyy HH:mm', { locale: language === 'en' ? enUS : id }) : '-'}</span>
                       </div>
                     </div>
                     

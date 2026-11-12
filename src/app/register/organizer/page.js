@@ -109,7 +109,7 @@ export default function RegisterOrganizerPage() {
         className="glass p-8 rounded-2xl w-full max-w-2xl relative z-10 max-h-[90vh] overflow-y-auto"
       >
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gradient">ConcertHub</h1>
+          <h1 className="text-3xl font-bold text-gradient">ShowTime</h1>
           <p className="text-white/60 mt-2">Daftar sebagai Organizer</p>
           <p className="text-sm text-yellow-400 mt-2">⚠️ Semua field dengan tanda * wajib diisi</p>
         </div>
@@ -353,7 +353,7 @@ export default function RegisterOrganizerPage() {
                   value={formData.bankHolder}
                   onChange={handleChange}
                   className="input-field"
-                  placeholder="PT ConcertHub"
+                  placeholder="PT ShowTime"
                 />
               </div>
             </div>

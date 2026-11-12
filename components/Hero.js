@@ -6,6 +6,7 @@ import { motion } from 'framer-motion';
 import { FaCalendarAlt, FaMapMarkerAlt, FaTicketAlt } from 'react-icons/fa';
 import axios from 'axios';
 import Countdown from './Countdown';
+import { useSiteSettings } from '../context/SiteSettingsContext';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
 
@@ -23,8 +24,8 @@ function getConcertDate(concert) {
   return date;
 }
 
-function formatEventDate(date) {
-  return new Intl.DateTimeFormat('id-ID', {
+function formatEventDate(date, language) {
+  return new Intl.DateTimeFormat(language === 'en' ? 'en-US' : 'id-ID', {
     weekday: 'long',
     day: 'numeric',
     month: 'long',
@@ -34,15 +35,8 @@ function formatEventDate(date) {
   }).format(date);
 }
 
-function formatPrice(price) {
-  return new Intl.NumberFormat('id-ID', {
-    style: 'currency',
-    currency: 'IDR',
-    maximumFractionDigits: 0,
-  }).format(Number(price) || 0);
-}
-
 const Hero = () => {
+  const { formatMoney, t, language } = useSiteSettings();
   const [concert, setConcert] = useState(null);
   const [concertDate, setConcertDate] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -123,7 +117,7 @@ const Hero = () => {
               className="inline-flex items-center gap-2 px-4 py-2 glass rounded-full text-sm font-medium mb-6"
             >
               <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
-              <span>{loading ? 'Mencari konser terdekat' : concert ? 'Konser terdekat' : 'Jadwal konser'}</span>
+              <span>{loading ? t('Mencari konser terdekat') : concert ? t('Konser terdekat') : t('Jadwal konser')}</span>
               {genre && (
                 <>
                   <span className="text-white/40">•</span>
@@ -134,18 +128,18 @@ const Hero = () => {
 
             <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold mb-6 leading-[1.1]">
               {loading ? (
-                <span className="text-gradient">Mencari konser...</span>
+                <span className="text-gradient">{t('Mencari konser...')}</span>
               ) : concert ? (
                 <span className="text-white drop-shadow-2xl">{concert.name}</span>
               ) : (
-                <span className="text-gradient">Temukan konser favoritmu</span>
+                <span className="text-gradient">{t('Temukan konser favoritmu')}</span>
               )}
             </h1>
 
             <p className="text-lg md:text-xl text-white/80 mb-8 max-w-2xl leading-relaxed">
               {concert?.description || (concert
-                ? `Jangan lewatkan ${concert.name}. Amankan tiketmu sekarang.`
-                : error || 'Jelajahi berbagai konser dan temukan acara berikutnya.')}
+                ? (language === 'en' ? `Don't miss ${concert.name}. Get your tickets now.` : `Jangan lewatkan ${concert.name}. Amankan tiketmu sekarang.`)
+                : error || t('Jelajahi berbagai konser dan temukan acara berikutnya.'))}
             </p>
 
             {concert && concertDate && (
@@ -153,7 +147,7 @@ const Hero = () => {
                 <div className="flex flex-wrap items-center gap-4 mb-8">
                   <div className="flex items-center gap-3 glass px-4 py-2 rounded-full">
                     <FaCalendarAlt className="text-primary text-lg" />
-                    <span className="text-white/90">{formatEventDate(concertDate)}</span>
+                    <span className="text-white/90">{formatEventDate(concertDate, language)}</span>
                   </div>
                   {location && (
                     <div className="flex items-center gap-3 glass px-4 py-2 rounded-full">
@@ -164,7 +158,7 @@ const Hero = () => {
                 </div>
 
                 <div className="mb-10">
-                  <p className="text-white/60 text-sm uppercase tracking-wider mb-3">Hitung mundur ke konser</p>
+                  <p className="text-white/60 text-sm uppercase tracking-wider mb-3">{t('Hitung mundur ke konser')}</p>
                   <Countdown targetDate={concertDate} />
                 </div>
               </>
@@ -174,9 +168,9 @@ const Hero = () => {
               <div className="flex flex-wrap gap-4">
                 <Link href={concertHref} className="btn-primary text-lg">
                   <FaTicketAlt className="text-xl" />
-                  <span>{concert ? 'Lihat tiket' : 'Jelajahi konser'}</span>
+                  <span>{concert ? t('Lihat tiket') : t('Jelajahi konser')}</span>
                   {concert && Number(concert.minPrice ?? concert.price) > 0 && (
-                    <span className="text-sm opacity-80">mulai {formatPrice(concert.minPrice ?? concert.price)}</span>
+                    <span className="text-sm opacity-80">{t('Starting from')} {formatMoney(concert.minPrice ?? concert.price)}</span>
                   )}
                 </Link>
               </div>

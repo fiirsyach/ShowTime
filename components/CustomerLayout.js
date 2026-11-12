@@ -10,7 +10,6 @@ import {
   FaHeart, 
   FaCalendar, 
   FaUser, 
-  FaCog, 
   FaSignOutAlt,
   FaSearch,
   FaChevronDown,
@@ -18,9 +17,11 @@ import {
   FaTimes
 } from 'react-icons/fa';
 import NotificationBell from './NotificationBell';
+import { useSiteSettings } from '../context/SiteSettingsContext';
 
 export default function CustomerLayout({ children }) {
   const { user, loading, logout } = useAuth();
+  const { t } = useSiteSettings();
   const pathname = usePathname();
   const router = useRouter();
   const [isScrolled, setIsScrolled] = useState(false);
@@ -67,12 +68,11 @@ export default function CustomerLayout({ children }) {
   if (!user) return null;
 
   const profileMenu = [
-    { href: '/dashboard', icon: FaHome, label: 'Dashboard' },
-    { href: '/my-tickets', icon: FaTicketAlt, label: 'My Tickets' },
-    { href: '/wishlist', icon: FaHeart, label: 'Wishlist' },
-    { href: '/orders', icon: FaCalendar, label: 'Order History' },
-    { href: '/profile', icon: FaUser, label: 'Profile' },
-    { href: '/settings', icon: FaCog, label: 'Settings' },
+    { href: '/dashboard', icon: FaHome, label: t('Dashboard') },
+    { href: '/my-tickets', icon: FaTicketAlt, label: t('My Tickets') },
+    { href: '/wishlist', icon: FaHeart, label: t('Wishlist') },
+    { href: '/orders', icon: FaCalendar, label: t('Order History') },
+    { href: '/profile', icon: FaUser, label: t('Profile') },
   ];
 
   const handleLogout = () => {
@@ -90,7 +90,7 @@ export default function CustomerLayout({ children }) {
         <div className="container mx-auto px-4 flex items-center justify-between gap-4">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2 shrink-0">
-            <span className="text-xl md:text-2xl font-bold text-gradient">ConcertHub</span>
+            <span className="text-xl md:text-2xl font-bold text-gradient">ShowTime</span>
           </Link>
 
           {/* Search Bar - Full Width */}
@@ -101,14 +101,14 @@ export default function CustomerLayout({ children }) {
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search concerts and venues..."
+                placeholder={t('Search concerts and venues...')}
                 className="w-full px-4 py-2.5 pl-11 glass rounded-full text-sm text-white placeholder-white/40 focus:border-primary focus:outline-none transition-all"
               />
               <button
                 type="submit"
                 className="absolute right-2 top-1/2 -translate-y-1/2 px-4 py-1 bg-primary/20 hover:bg-primary/30 text-primary rounded-full text-xs font-medium transition-colors"
               >
-                Search
+                {t('Search')}
               </button>
             </div>
           </form>

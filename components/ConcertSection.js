@@ -6,10 +6,12 @@ import Link from 'next/link';
 import axios from 'axios';
 import { FaArrowRight, FaBolt } from 'react-icons/fa';
 import ConcertCard from './ConcertCard';
+import { useSiteSettings } from '../context/SiteSettingsContext';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
 
 const ConcertSection = ({ id, title, subtitle, viewAll, filter = '', flashSale = false }) => {
+  const { t } = useSiteSettings();
   const [concerts, setConcerts] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -51,10 +53,10 @@ const ConcertSection = ({ id, title, subtitle, viewAll, filter = '', flashSale =
               transition={{ duration: 0.5 }}
             >
               <span className="text-xs uppercase tracking-widest text-primary font-semibold mb-2 block">
-                {flashSale ? '⚡ Limited Time' : '🎵 Live Events'}
+                {flashSale ? `⚡ ${t('Limited Time')}` : `🎵 ${t('Live Events')}`}
               </span>
               <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold">
-                {title}
+                {t(title)}
                 {flashSale && (
                   <span className="ml-3 inline-block px-4 py-1 bg-secondary text-white text-sm rounded-full animate-pulse">
                     HOT!
@@ -62,7 +64,7 @@ const ConcertSection = ({ id, title, subtitle, viewAll, filter = '', flashSale =
                 )}
               </h2>
               {subtitle && (
-                <p className="text-white/60 mt-2 text-lg">{subtitle}</p>
+                <p className="text-white/60 mt-2 text-lg">{t(subtitle)}</p>
               )}
             </motion.div>
           </div>
@@ -77,7 +79,7 @@ const ConcertSection = ({ id, title, subtitle, viewAll, filter = '', flashSale =
                 href={viewAll}
                 className="group inline-flex items-center gap-2 text-primary hover:text-primary/80 transition-colors font-medium"
               >
-                <span>View All Events</span>
+                <span>{t('View All Events')}</span>
                 <FaArrowRight className="group-hover:translate-x-1 transition-transform duration-300" />
               </Link>
             </motion.div>
@@ -99,11 +101,11 @@ const ConcertSection = ({ id, title, subtitle, viewAll, filter = '', flashSale =
                 </div>
                 <div>
                   <h4 className="font-bold text-lg">⚡ Flash Sale!</h4>
-                  <p className="text-white/60 text-sm">Limited time offer - up to 50% off selected events</p>
+                  <p className="text-white/60 text-sm">{t('Limited time offer - up to 50% off selected events')}</p>
                 </div>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-xs bg-dark/50 px-3 py-1 rounded-full text-white/60">Ends in</span>
+                <span className="text-xs bg-dark/50 px-3 py-1 rounded-full text-white/60">{t('Ends in')}</span>
                 <span className="font-mono font-bold text-secondary">02:15:30</span>
               </div>
             </div>
@@ -128,7 +130,7 @@ const ConcertSection = ({ id, title, subtitle, viewAll, filter = '', flashSale =
             ))
           ) : (
             <div className="col-span-full card p-8 text-center text-white/60">
-              Belum ada event yang tersedia untuk kategori ini.
+              {t('Belum ada event yang tersedia untuk kategori ini.')}
             </div>
           )}
         </div>

@@ -26,6 +26,7 @@ import {
 } from 'react-icons/fa';
 import toast from 'react-hot-toast';
 import axios from 'axios';
+import { useSiteSettings } from '../../../../context/SiteSettingsContext';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
 
@@ -50,6 +51,7 @@ api.interceptors.request.use(
 
 export default function SuperAdminDashboard() {
   const { user, loading, logout } = useAuth();
+  const { refreshSiteSettings } = useSiteSettings();
   const router = useRouter();
   const [activeTab, setActiveTab] = useState('dashboard');
   const [loadingData, setLoadingData] = useState(true);
@@ -65,9 +67,11 @@ export default function SuperAdminDashboard() {
   const [userSearch, setUserSearch] = useState('');
   const [exportingReport, setExportingReport] = useState('');
   const [settings, setSettings] = useState({
-    siteName: 'ConcertHub',
+    siteName: 'ShowTime',
     siteDescription: 'Concert Ticket Booking Platform',
+    language: 'id',
     currency: 'IDR',
+    usdExchangeRate: 16000,
     emailVerification: true,
     twoFactorAuth: false,
     maintenanceMode: false
@@ -352,11 +356,18 @@ const handleDeleteUser = async (userId) => {
   const handleSaveSettings = async () => {
     try {
       const response = await api.put('/super-admin/system', settings);
-      if (response.data.success) {
-        toast.success('Pengaturan berhasil disimpan');
+      if (!response.data.success) {
+        throw new Error(response.data.message || 'Gagal menyimpan pengaturan');
+      }
+      toast.success('Pengaturan berhasil disimpan');
+      try {
+        await refreshSiteSettings();
+      } catch (error) {
+        console.error('Settings saved, but public site settings could not be refreshed:', error);
+        toast.error('Pengaturan tersimpan, tetapi konfigurasi website belum dapat dimuat ulang');
       }
     } catch (error) {
-      toast.error(error.response?.data?.message || 'Gagal menyimpan pengaturan');
+      toast.error(error.response?.data?.message || error.message || 'Gagal menyimpan pengaturan');
     }
   };
 
@@ -441,7 +452,7 @@ const handleDeleteUser = async (userId) => {
       {/* Sidebar - Sama seperti sebelumnya */}
       <div className="fixed left-0 top-0 h-full w-64 glass-dark border-r border-white/5 p-6 z-50 overflow-y-auto">
         <div className="mb-8">
-          <h2 className="text-xl font-bold text-gradient">ConcertHub</h2>
+          <h2 className="text-xl font-bold text-gradient">ShowTime</h2>
           <p className="text-xs text-white/40 mt-1">Super Admin</p>
           <p className="text-xs text-primary mt-1">👑 Full Access</p>
         </div>
@@ -1017,6 +1028,18 @@ const handleDeleteUser = async (userId) => {
                       />
                     </div>
                     <div>
+                      <label className="block text-sm font-medium text-white/80 mb-2">Website Language</label>
+                      <select
+                        name="language"
+                        value={settings.language}
+                        onChange={handleSettingChange}
+                        className="input-field"
+                      >
+                        <option value="id">Bahasa Indonesia</option>
+                        <option value="en">English</option>
+                      </select>
+                    </div>
+                    <div>
                       <label className="block text-sm font-medium text-white/80 mb-2">Currency</label>
                       <select 
                         name="currency"
@@ -1028,6 +1051,22 @@ const handleDeleteUser = async (userId) => {
                         <option value="USD">US Dollar ($)</option>
                       </select>
                     </div>
+                    {settings.currency === 'USD' && (
+                      <div>
+                        <label className="block text-sm font-medium text-white/80 mb-2">USD conversion rate (IDR per USD)</label>
+                        <input
+                          type="number"
+                          name="usdExchangeRate"
+                          min="1"
+                          step="1"
+                          value={settings.usdExchangeRate}
+                          onChange={handleSettingChange}
+                          className="input-field"
+                          required
+                        />
+                        <p className="mt-1 text-xs text-white/50">Used for display only. Payments remain in IDR.</p>
+                      </div>
+                    )}
                     <button onClick={handleSaveSettings} className="btn-primary">
                       Save Settings
                     </button>

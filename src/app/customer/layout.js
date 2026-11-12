@@ -82,7 +82,7 @@ export default function CustomerLayout({ children }) {
         <div className="container mx-auto px-4 flex items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2">
-            <span className="text-2xl font-bold text-gradient">ConcertHub</span>
+            <span className="text-2xl font-bold text-gradient">ShowTime</span>
           </Link>
 
           {/* Desktop Navigation */}

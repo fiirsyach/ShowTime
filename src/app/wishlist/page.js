@@ -16,11 +16,12 @@ import {
   FaMusic
 } from 'react-icons/fa';
 import { format } from 'date-fns';
-import { id } from 'date-fns/locale';
+import { enUS, id } from 'date-fns/locale';
 import toast from 'react-hot-toast';
 import axios from 'axios';
 import CustomerLayout from '../../../components/CustomerLayout';
 import { getConcertPoster, getMediaUrl } from '../../../lib/media-url';
+import { useSiteSettings } from '../../../context/SiteSettingsContext';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
 
@@ -44,6 +45,7 @@ api.interceptors.request.use(
 
 export default function WishlistPage() {
   const { user, loading, removeWishlist } = useAuth();
+  const { formatMoney, language } = useSiteSettings();
   const router = useRouter();
   const [wishlist, setWishlist] = useState([]);
   const [loadingWishlist, setLoadingWishlist] = useState(true);
@@ -87,14 +89,10 @@ export default function WishlistPage() {
 
   const formatDate = (value, pattern) => {
     if (!value || !Number.isFinite(new Date(value).getTime())) return 'Tanggal belum tersedia';
-    return format(new Date(value), pattern, { locale: id });
+    return format(new Date(value), pattern, { locale: language === 'en' ? enUS : id });
   };
 
-  const formatPrice = (value) => new Intl.NumberFormat('id-ID', {
-    style: 'currency',
-    currency: 'IDR',
-    maximumFractionDigits: 0
-  }).format(Number(value) || 0);
+  const formatPrice = (value) => formatMoney(value);
 
   if (loading || loadingWishlist) {
     return (

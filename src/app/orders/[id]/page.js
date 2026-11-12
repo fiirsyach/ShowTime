@@ -9,6 +9,7 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 import { FaArrowLeft, FaCalendarAlt, FaMapMarkerAlt, FaSpinner, FaTicketAlt } from 'react-icons/fa';
 import { openMidtransSnap } from '../../../lib/midtrans';
+import { useSiteSettings } from '../../../../context/SiteSettingsContext';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
 const api = axios.create({ baseURL: API_URL });
@@ -23,6 +24,7 @@ export default function OrderDetailPage() {
   const { id } = useParams();
   const router = useRouter();
   const { user, loading } = useAuth();
+  const { formatMoney } = useSiteSettings();
   const [order, setOrder] = useState(null);
   const [loadingOrder, setLoadingOrder] = useState(true);
   const [cancelling, setCancelling] = useState(false);
@@ -235,7 +237,7 @@ export default function OrderDetailPage() {
                       {ticket.qrCode && ticket.status === 'active' && (
                         <Image src={ticket.qrCode} alt={`QR ${ticket.ticketNumber}`} width={64} height={64} unoptimized className="h-16 w-16 rounded bg-white p-1" />
                       )}
-                      <p>Rp {Number(ticket.price || 0).toLocaleString('id-ID')}</p>
+                      <p>{formatMoney(ticket.price)}</p>
                     </div>
                   </div>
                 ))}
@@ -247,10 +249,10 @@ export default function OrderDetailPage() {
           <aside className="glass h-fit rounded-xl p-6">
             <h2 className="mb-4 text-lg font-semibold">Ringkasan pembayaran</h2>
             <dl className="space-y-3 text-sm">
-              <div className="flex justify-between text-white/60"><dt>Subtotal</dt><dd>Rp {Number(order.subtotal || order.totalAmount).toLocaleString('id-ID')}</dd></div>
-              <div className="flex justify-between text-white/60"><dt>Biaya layanan</dt><dd>Rp {Number(order.serviceFee || 0).toLocaleString('id-ID')}</dd></div>
-              <div className="flex justify-between text-white/60"><dt>Diskon</dt><dd>Rp {Number(order.discount || 0).toLocaleString('id-ID')}</dd></div>
-              <div className="flex justify-between border-t border-white/10 pt-3 text-base font-bold"><dt>Total</dt><dd>Rp {Number(order.totalAmount || 0).toLocaleString('id-ID')}</dd></div>
+              <div className="flex justify-between text-white/60"><dt>Subtotal</dt><dd>{formatMoney(order.subtotal || order.totalAmount)}</dd></div>
+              <div className="flex justify-between text-white/60"><dt>Biaya layanan</dt><dd>{formatMoney(order.serviceFee || 0)}</dd></div>
+              <div className="flex justify-between text-white/60"><dt>Diskon</dt><dd>{formatMoney(order.discount || 0)}</dd></div>
+              <div className="flex justify-between border-t border-white/10 pt-3 text-base font-bold"><dt>Total</dt><dd>{formatMoney(order.totalAmount || 0)}</dd></div>
               <div className="flex justify-between text-white/60"><dt>Metode</dt><dd>{payment?.paymentData?.gateway === 'midtrans' ? 'Midtrans' : payment?.paymentData?.gateway === 'disabled' ? 'Mode uji coba' : payment?.method || order.paymentMethod || '-'}</dd></div>
               <div className="flex justify-between text-white/60"><dt>Pembayaran</dt><dd>{payment?.status === 'completed' ? 'Berhasil' : payment?.status || 'Menunggu pembayaran'}</dd></div>
             </dl>

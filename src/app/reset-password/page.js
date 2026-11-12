@@ -61,7 +61,7 @@ function ResetPasswordForm() {
         className="glass p-8 rounded-2xl w-full max-w-md relative z-10"
       >
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gradient">ConcertHub</h1>
+          <h1 className="text-3xl font-bold text-gradient">ShowTime</h1>
           <p className="text-white/60 mt-2">Buat password baru</p>
         </div>
         {!token && !email ? (

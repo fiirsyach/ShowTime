@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '../../../context/AuthContext';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { 
   FaUser, 
   FaEnvelope, 
@@ -16,6 +17,7 @@ import {
 import toast from 'react-hot-toast';
 import axios from 'axios';
 import CustomerLayout from '../../../components/CustomerLayout';
+import { useSiteSettings } from '../../../context/SiteSettingsContext';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
 
@@ -39,6 +41,7 @@ api.interceptors.request.use(
 
 export default function ProfilePage() {
   const { user, loading } = useAuth();
+  const { t } = useSiteSettings();
   const router = useRouter();
   const [isEditing, setIsEditing] = useState(false);
   const [loadingProfile, setLoadingProfile] = useState(true);
@@ -189,7 +192,7 @@ export default function ProfilePage() {
         <div className="min-h-[60vh] flex items-center justify-center">
           <div className="text-center">
             <FaSpinner className="w-12 h-12 text-primary animate-spin mx-auto" />
-            <p className="mt-4 text-white/60">Loading profile...</p>
+            <p className="mt-4 text-white/60">{t('Loading profile...')}</p>
           </div>
         </div>
       </CustomerLayout>
@@ -208,8 +211,8 @@ export default function ProfilePage() {
         </div>
         <div className="relative container mx-auto px-4">
           <div className="max-w-3xl">
-            <h1 className="text-4xl font-bold mb-2">Profile</h1>
-            <p className="text-white/60">Manage your account information</p>
+            <h1 className="text-4xl font-bold mb-2">{t('Profile')}</h1>
+            <p className="text-white/60">{t('Manage your account information')}</p>
           </div>
         </div>
       </div>
@@ -239,7 +242,7 @@ export default function ProfilePage() {
                   className="btn-primary flex items-center gap-2 text-sm"
                 >
                   <FaEdit />
-                  Edit Profile
+                  {t('Edit Profile')}
                 </button>
               )}
             </div>
@@ -248,7 +251,7 @@ export default function ProfilePage() {
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-white/80 mb-2">Full Name</label>
+                  <label className="block text-sm font-medium text-white/80 mb-2">{t('Full Name')}</label>
                   <div className="relative">
                     <FaUser className="absolute left-4 top-1/2 -translate-y-1/2 text-white/40" />
                     <input
@@ -263,7 +266,7 @@ export default function ProfilePage() {
                   </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-white/80 mb-2">Email</label>
+                  <label className="block text-sm font-medium text-white/80 mb-2">{t('Email')}</label>
                   <div className="relative">
                     <FaEnvelope className="absolute left-4 top-1/2 -translate-y-1/2 text-white/40" />
                     <input
@@ -276,7 +279,7 @@ export default function ProfilePage() {
                   </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-white/80 mb-2">Phone</label>
+                  <label className="block text-sm font-medium text-white/80 mb-2">{t('Phone')}</label>
                   <div className="relative">
                     <FaPhone className="absolute left-4 top-1/2 -translate-y-1/2 text-white/40" />
                     <input
@@ -290,7 +293,7 @@ export default function ProfilePage() {
                   </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-white/80 mb-2">City</label>
+                  <label className="block text-sm font-medium text-white/80 mb-2">{t('City')}</label>
                   <div className="relative">
                     <FaMapMarkerAlt className="absolute left-4 top-1/2 -translate-y-1/2 text-white/40" />
                     <input
@@ -306,7 +309,7 @@ export default function ProfilePage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-white/80 mb-2">Address</label>
+                <label className="block text-sm font-medium text-white/80 mb-2">{t('Address')}</label>
                 <textarea
                   name="address"
                   value={formData.address}
@@ -314,12 +317,12 @@ export default function ProfilePage() {
                   disabled={!isEditing}
                   rows="2"
                   className="input-field"
-                  placeholder="Your address"
+                  placeholder={t('Your address')}
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-white/80 mb-2">Bio</label>
+                <label className="block text-sm font-medium text-white/80 mb-2">{t('Bio')}</label>
                 <textarea
                   name="bio"
                   value={formData.bio}
@@ -327,7 +330,7 @@ export default function ProfilePage() {
                   disabled={!isEditing}
                   rows="3"
                   className="input-field"
-                  placeholder="Tell us about yourself..."
+                  placeholder={t('Tell us about yourself...')}
                 />
               </div>
 
@@ -341,21 +344,26 @@ export default function ProfilePage() {
                     }}
                     className="px-6 py-2 glass rounded-lg hover:bg-white/10 transition-colors"
                   >
-                    Cancel
+                    {t('Cancel')}
                   </button>
                   <button type="submit" disabled={savingProfile} className="btn-primary disabled:cursor-wait disabled:opacity-60">
                     {savingProfile ? <FaSpinner className="w-4 h-4 animate-spin" /> : <FaSave className="w-4 h-4" />}
-                    {savingProfile ? 'Saving...' : 'Save Changes'}
+                    {savingProfile ? t('Saving...') : t('Save Changes')}
                   </button>
                 </div>
               )}
             </form>
 
             <form onSubmit={handlePasswordChange} className="mt-6 border-t border-white/10 pt-6">
-              <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold">
-                <FaLock className="text-primary" />
-                Ubah Password
-              </h3>
+              <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
+                <h3 className="flex items-center gap-2 text-lg font-semibold">
+                  <FaLock className="text-primary" />
+                  {t('Change Password')}
+                </h3>
+                <Link href="/forgot-password" className="text-sm text-primary hover:text-primary/80">
+                  {t('Forgot password?')}
+                </Link>
+              </div>
               <div className="grid gap-4 md:grid-cols-3">
                 <input
                   type="password"
@@ -363,8 +371,8 @@ export default function ProfilePage() {
                   value={passwordForm.currentPassword}
                   onChange={(event) => setPasswordForm((current) => ({ ...current, currentPassword: event.target.value }))}
                   className="input-field"
-                  placeholder="Password saat ini"
-                  aria-label="Password saat ini"
+                  placeholder={t('Current password')}
+                  aria-label={t('Current password')}
                   required
                 />
                 <input
@@ -373,8 +381,8 @@ export default function ProfilePage() {
                   value={passwordForm.newPassword}
                   onChange={(event) => setPasswordForm((current) => ({ ...current, newPassword: event.target.value }))}
                   className="input-field"
-                  placeholder="Password baru (min. 8 karakter)"
-                  aria-label="Password baru"
+                  placeholder={t('New password (min. 8 characters)')}
+                  aria-label={t('New password (min. 8 characters)')}
                   minLength={8}
                   required
                 />
@@ -384,8 +392,8 @@ export default function ProfilePage() {
                   value={passwordForm.confirmPassword}
                   onChange={(event) => setPasswordForm((current) => ({ ...current, confirmPassword: event.target.value }))}
                   className="input-field"
-                  placeholder="Konfirmasi password baru"
-                  aria-label="Konfirmasi password baru"
+                  placeholder={t('Confirm new password')}
+                  aria-label={t('Confirm new password')}
                   minLength={8}
                   required
                 />
@@ -393,7 +401,7 @@ export default function ProfilePage() {
               <div className="mt-4 flex justify-end">
                 <button type="submit" disabled={savingPassword} className="btn-primary disabled:cursor-wait disabled:opacity-60">
                   {savingPassword ? <FaSpinner className="h-4 w-4 animate-spin" /> : <FaLock className="h-4 w-4" />}
-                  {savingPassword ? 'Menyimpan...' : 'Simpan Password'}
+                  {savingPassword ? t('Saving...') : t('Save Password')}
                 </button>
               </div>
             </form>
@@ -402,11 +410,11 @@ export default function ProfilePage() {
             <div className="grid grid-cols-3 gap-4 mt-8 pt-8 border-t border-white/10">
               <div className="text-center">
                 <p className="text-2xl font-bold text-gradient">{profileStats.totalTickets}</p>
-                <p className="text-sm text-white/60">Tickets</p>
+                <p className="text-sm text-white/60">{t('Tickets')}</p>
               </div>
               <div className="text-center">
                 <p className="text-2xl font-bold text-gradient">{profileStats.upcomingEvents}</p>
-                <p className="text-sm text-white/60">Upcoming</p>
+                <p className="text-sm text-white/60">{t('Upcoming')}</p>
               </div>
               <div className="text-center">
                 <p className="text-2xl font-bold text-gradient">{profileStats.wishlistCount}</p>
